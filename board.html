@@ -3,7 +3,7 @@
     <head>
         <label> Choose the size of the grid:
             <select class="grid-size" name="grid-size">
-                <option value="0">0</option>
+                
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -21,12 +21,16 @@
         
 
         </label>
+        <form class="SpeedBar" action="">
+            <label>Speed (from 0 to 300 ms):</label>
+            <input id="speed-input" for="Speed" type="range" min="0" max="300" step="30" >
+        </form>
         <link rel="stylesheet" href="styles.css">
         <script src="FindQueens.js"></script>
     </head>
     <body>
         <h1>
-            <button class="begin" name="begin" type="button"> Press To Start </button>
+            <button class="begin" name="begin" type="button">Press To Start</button>
         </h1>
         <div class="result"></div>
     </body>

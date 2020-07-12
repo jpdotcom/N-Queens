@@ -15,17 +15,33 @@ const createList = (size) => {
   return board;
 };
 
-const createGrid = (n) => {
+createGrid = (n) => {
   for (let i = 0; i < n; i++) {
     let container = document.createElement("div");
+
     container.classList.add("container");
 
     for (let j = 0; j < n; j++) {
       let s = document.createElement("div");
       s.id = i + "," + j;
-
       s.classList.add("box");
       container.append(s);
+      s.addEventListener("click", () => {
+        const obstruction = document.createElement("img");
+        obstruction.src =
+          "https://th.bing.com/th/id/OIP.q0jNJtBeHpON6IXsJKmXXgAAAA?pid=Api&rs=1";
+
+        if (s.getElementsByTagName("img").length > 0) {
+          let b = s.getElementsByTagName("img");
+
+          b[0].remove(b[0]);
+        } else {
+          obstruction.height = 55;
+          obstruction.width = 55;
+
+          s.appendChild(obstruction);
+        }
+      });
     }
 
     document.body.append(container);
@@ -34,7 +50,6 @@ const createGrid = (n) => {
 
 const onStartButtonClick = (e) => {
   e.stopPropagation();
-
   const choosesize = document.querySelector(".grid-size");
   let n = parseInt(choosesize.value);
   let count = 0;
@@ -42,11 +57,21 @@ const onStartButtonClick = (e) => {
   let i = 1;
   let computations = 0;
   let remove = false;
+
+  let done = false;
+
   const board = createList(n);
-  destoryGrid();
-  createGrid(n);
+
   document.querySelector(".result").innerHTML =
     "There are " + 0 + " solution/s";
+
+  let change = document.getElementById("speed-input");
+  change.addEventListener("change", () => {
+    if (!done) {
+      clearInterval(s);
+      s = setInterval(findValidQeeuns, change.value);
+    }
+  });
 
   function addImage(i, j) {
     const img = document.createElement("img");
@@ -60,10 +85,11 @@ const onStartButtonClick = (e) => {
   function removeImage(i, j) {
     document.getElementById(i + "." + j).remove();
   }
-  let s = setInterval(function findValidQeeuns() {
+  function findValidQeeuns() {
+    computations++;
     let n = board.length;
 
-    if (remove) {
+    if (remove && n != 1) {
       removeImage(board[idx] - 1, idx);
       remove = false;
     }
@@ -76,6 +102,7 @@ const onStartButtonClick = (e) => {
       if (idx == n - 1) {
         remove = true;
         i += 1;
+
         count++;
         document.querySelector(".result").innerHTML =
           "There are " + count + " solution/s";
@@ -93,36 +120,59 @@ const onStartButtonClick = (e) => {
       }
       move = true;
       for (let k = 0; k < idx + 1; k++) {
+        let prev_idx = idx;
         if (move) {
-          board[idx] = 1;
-
           if (idx != 0) {
+            board[idx] = 1;
             idx--;
           }
 
           if (board[idx] + 1 > n) {
-            removeImage(board[idx] - 1, idx);
+            if (idx != 0) {
+              removeImage(board[idx] - 1, idx);
+            }
             if (idx == 0) {
+              if (n != 1 && isValid(0)) {
+                removeImage(n - 1, 0);
+              }
+
               move = false;
               console.log(count);
               console.log(computations);
+              done = true;
+
               clearInterval(s);
             }
           } else {
             move = false;
 
             i = board[idx] + 1;
-          }
 
-          remove = true;
+            remove = true;
+          }
         }
       }
     }
-  }, 500); //Adjust speed here
+  }
+
+  let s = setInterval(
+    findValidQeeuns,
+    document.getElementById("speed-input").value
+  ); //Adjust speed here
 
   function isValid(idx) {
+    let box = document.getElementById(board[idx] - 1 + "," + idx);
+
+    if (box.getElementsByTagName("img").length > 0) {
+      let list = box.getElementsByTagName("img");
+      if (list[0].id == "") {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
     for (let i = 0; i < idx; i++) {
-      computations++;
       if (
         board[idx] === board[i] ||
         Math.abs(board[idx] - board[i]) === idx - i
@@ -136,7 +186,14 @@ const onStartButtonClick = (e) => {
 };
 
 const main = () => {
+  createGrid(1);
+  const make = document.querySelector(".grid-size");
+  make.addEventListener("change", (event) => {
+    destoryGrid();
+    createGrid(event.target.value);
+  });
   const start = document.querySelector(".begin");
+
   start.addEventListener("click", onStartButtonClick);
 };
 
