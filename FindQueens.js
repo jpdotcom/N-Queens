@@ -1,24 +1,21 @@
 const boxListeners = {};
 
 const addX = (s) => (e) => {
-  
-    const obstruction = document.createElement("img");
-    obstruction.src =
-      "https://th.bing.com/th/id/OIP.q0jNJtBeHpON6IXsJKmXXgAAAA?pid=Api&rs=1";
+  const obstruction = document.createElement("img");
+  obstruction.src =
+    "https://th.bing.com/th/id/OIP.q0jNJtBeHpON6IXsJKmXXgAAAA?pid=Api&rs=1";
 
-    if (s.getElementsByTagName("img").length > 0) {
-      let b = s.getElementsByTagName("img");
+  if (s.getElementsByTagName("img").length > 0) {
+    let b = s.getElementsByTagName("img");
 
-      b[0].remove(b[0]);
-    } else {
-      obstruction.height = 55;
-      obstruction.width = 55;
+    b[0].remove(b[0]);
+  } else {
+    obstruction.height = 55;
+    obstruction.width = 55;
 
-      s.appendChild(obstruction);
-    }
-
+    s.appendChild(obstruction);
   }
-
+};
 
 const destoryGrid = () => {
   const containers = document.getElementsByClassName("container");
@@ -49,9 +46,9 @@ const createGrid = (n) => {
       s.classList.add("box");
       container.append(s);
       const el = addX(s);
-      let box_idx= i + ',' + j;
-      boxListeners[box_idx]=el
-      
+      let box_idx = i + "," + j;
+      boxListeners[box_idx] = el;
+
       s.addEventListener("click", el);
     }
 
@@ -60,7 +57,6 @@ const createGrid = (n) => {
 };
 
 const onStartButtonClick = (e) => {
-  
   e.stopPropagation();
   const choosesize = document.querySelector(".grid-size");
   let n = parseInt(choosesize.value);
@@ -71,11 +67,11 @@ const onStartButtonClick = (e) => {
   let remove = false;
 
   let done = false;
-  
-  for (let i=0;i<n;i++){
-    for (let j=0;j<n;j++){
-      let box=document.getElementById(i+","+j)
-      box.removeEventListener("click",boxListeners[i+","+j])
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      let box = document.getElementById(i + "," + j);
+      box.removeEventListener("click", boxListeners[i + "," + j]);
     }
   }
   const board = createList(n);
@@ -158,10 +154,10 @@ const onStartButtonClick = (e) => {
               console.log(count);
               console.log(computations);
               done = true;
-              for (let i=0;i<n;i++){
-                for (let j=0;j<n;j++){
-                  let box=document.getElementById(i+","+j)
-                  box.addEventListener("click",boxListeners[i+","+j])
+              for (let i = 0; i < n; i++) {
+                for (let j = 0; j < n; j++) {
+                  let box = document.getElementById(i + "," + j);
+                  box.addEventListener("click", boxListeners[i + "," + j]);
                 }
               }
               clearInterval(s);
@@ -218,7 +214,6 @@ const main = () => {
   const start = document.querySelector(".begin");
 
   start.addEventListener("click", onStartButtonClick);
-  
 };
 
 document.addEventListener("DOMContentLoaded", () => {
