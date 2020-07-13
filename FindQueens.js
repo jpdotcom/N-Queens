@@ -158,7 +158,12 @@ const onStartButtonClick = (e) => {
               console.log(count);
               console.log(computations);
               done = true;
-
+              for (let i=0;i<n;i++){
+                for (let j=0;j<n;j++){
+                  let box=document.getElementById(i+","+j)
+                  box.addEventListener("click",boxListeners[i+","+j])
+                }
+              }
               clearInterval(s);
             }
           } else {
