@@ -1,3 +1,25 @@
+const boxListeners = {};
+
+const addX = (s) => (e) => {
+  
+    const obstruction = document.createElement("img");
+    obstruction.src =
+      "https://th.bing.com/th/id/OIP.q0jNJtBeHpON6IXsJKmXXgAAAA?pid=Api&rs=1";
+
+    if (s.getElementsByTagName("img").length > 0) {
+      let b = s.getElementsByTagName("img");
+
+      b[0].remove(b[0]);
+    } else {
+      obstruction.height = 55;
+      obstruction.width = 55;
+
+      s.appendChild(obstruction);
+    }
+
+  }
+
+
 const destoryGrid = () => {
   const containers = document.getElementsByClassName("container");
 
@@ -15,7 +37,7 @@ const createList = (size) => {
   return board;
 };
 
-createGrid = (n) => {
+const createGrid = (n) => {
   for (let i = 0; i < n; i++) {
     let container = document.createElement("div");
 
@@ -26,22 +48,11 @@ createGrid = (n) => {
       s.id = i + "," + j;
       s.classList.add("box");
       container.append(s);
-      s.addEventListener("click", () => {
-        const obstruction = document.createElement("img");
-        obstruction.src =
-          "https://th.bing.com/th/id/OIP.q0jNJtBeHpON6IXsJKmXXgAAAA?pid=Api&rs=1";
-
-        if (s.getElementsByTagName("img").length > 0) {
-          let b = s.getElementsByTagName("img");
-
-          b[0].remove(b[0]);
-        } else {
-          obstruction.height = 55;
-          obstruction.width = 55;
-
-          s.appendChild(obstruction);
-        }
-      });
+      const el = addX(s);
+      let box_idx= i + ',' + j;
+      boxListeners[box_idx]=el
+      
+      s.addEventListener("click", el);
     }
 
     document.body.append(container);
@@ -49,6 +60,7 @@ createGrid = (n) => {
 };
 
 const onStartButtonClick = (e) => {
+  
   e.stopPropagation();
   const choosesize = document.querySelector(".grid-size");
   let n = parseInt(choosesize.value);
@@ -59,7 +71,13 @@ const onStartButtonClick = (e) => {
   let remove = false;
 
   let done = false;
-
+  
+  for (let i=0;i<n;i++){
+    for (let j=0;j<n;j++){
+      let box=document.getElementById(i+","+j)
+      box.removeEventListener("click",boxListeners[i+","+j])
+    }
+  }
   const board = createList(n);
 
   document.querySelector(".result").innerHTML =
@@ -195,6 +213,7 @@ const main = () => {
   const start = document.querySelector(".begin");
 
   start.addEventListener("click", onStartButtonClick);
+  
 };
 
 document.addEventListener("DOMContentLoaded", () => {
